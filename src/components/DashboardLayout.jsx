@@ -1,24 +1,26 @@
-import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import DownloadIcon from '@mui/icons-material/Download';
+import * as React from 'react'
+import { styled, useTheme } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import MuiDrawer from '@mui/material/Drawer'
+import MuiAppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import List from '@mui/material/List'
+import CssBaseline from '@mui/material/CssBaseline'
+import Typography from '@mui/material/Typography'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import DownloadIcon from '@mui/icons-material/Download'
 
-const drawerWidth = 240;
+import FileViewer from './FileViewer'
+
+const drawerWidth = 240
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
@@ -27,7 +29,7 @@ const openedMixin = (theme) => ({
     duration: theme.transitions.duration.enteringScreen,
   }),
   overflowX: 'hidden',
-});
+})
 
 const closedMixin = (theme) => ({
   transition: theme.transitions.create('width', {
@@ -39,7 +41,7 @@ const closedMixin = (theme) => ({
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
-});
+})
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -48,7 +50,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
-}));
+}))
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -66,7 +68,7 @@ const AppBar = styled(MuiAppBar, {
       duration: theme.transitions.duration.enteringScreen,
     }),
   }),
-}));
+}))
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -82,21 +84,30 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
       ...closedMixin(theme),
       '& .MuiDrawer-paper': closedMixin(theme),
     }),
-  }),
-);
+  })
+)
 
-export default function MiniDrawer({ children }) {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+export default function MiniDrawer() {
+  const theme = useTheme()
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(true)
+  const [file, setFile] = React.useState(null)
 
-  const handleDrawerOpen = () => setOpen(true)
+  const handleDrawerOpen = () => setIsDrawerOpen(true)
 
-  const handleDrawerClose = () => setOpen(false)
+  const handleDrawerClose = () => setIsDrawerOpen(false)
+
+  const handleFileUpload = (e) => {
+    const { files } = e.target
+
+    if (files && files[0]) {
+      setFile(files[0] || null)
+    }
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={isDrawerOpen} color="primary">
         <Toolbar>
           <IconButton
             color="inherit"
@@ -105,7 +116,7 @@ export default function MiniDrawer({ children }) {
             edge="start"
             sx={{
               marginRight: 5,
-              ...(open && { display: 'none' }),
+              ...(isDrawerOpen && { display: 'none' }),
             }}
           >
             <MenuIcon />
@@ -115,42 +126,50 @@ export default function MiniDrawer({ children }) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader sx={{ background: '#1976d2' }}>
+      <Drawer variant="permanent" open={isDrawerOpen}>
+        <DrawerHeader sx={{ background: (theme) => theme.palette.primary.main }}>
           <IconButton sx={{ color: '#fff' }} onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {['File Upload'].map((text) => (
+          {['Import New'].map((text) => (
             <ListItem key={text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
+                  justifyContent: isDrawerOpen ? 'initial' : 'center',
                   px: 2.5,
                 }}
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
-                    mr: open ? 3 : 'auto',
+                    mr: isDrawerOpen ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
                 >
                   <DownloadIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={text} sx={{ opacity: isDrawerOpen ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          background: '#efefef',
+          height: '100vh',
+        }}
+      >
         <DrawerHeader />
-        {children}
+        <FileViewer file={file} handleFileUpload={handleFileUpload} />
       </Box>
     </Box>
-  );
+  )
 }

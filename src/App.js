@@ -1,16 +1,15 @@
 import DashboardLayout from './components/DashboardLayout'
-import FileViewer from './components/FileViewer'
+
+import { ThemeProvider } from '@mui/material/styles'
+
+import { theme } from './theme'
 
 function App() {
-
-
   return (
-    <div>
-      <DashboardLayout>
-        <FileViewer />
-      </DashboardLayout>
-    </div>
-  );
+    <ThemeProvider theme={theme}>
+      <DashboardLayout />
+    </ThemeProvider>
+  )
 }
 
-export default App;
+export default App
