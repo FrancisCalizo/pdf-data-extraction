@@ -7,6 +7,14 @@ import DownloadIcon from '@mui/icons-material/Download';
 function FileViewer() {
   const [file, setFile] = React.useState(null)
 
+  const handleFileUpload = (e) => {
+    const { files } = e.target
+
+    if (files && files[0]) {
+      setFile(files[0] || null);
+    }
+  }
+
   if (!file) {
     return (
       <Box sx={{
@@ -18,14 +26,28 @@ function FileViewer() {
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           Please upload a file to get started
 
-          <Button
-            variant='contained'
-            sx={{ marginTop: 1 }}
-            startIcon={<DownloadIcon />}>
-            Import
-          </Button>
+
+          <input
+            accept="pdf/*"
+            style={{ display: 'none' }}
+            id="raised-button-file"
+            type="file"
+            onChange={handleFileUpload}
+          // multiple
+          />
+          <label htmlFor="raised-button-file">
+            <Button
+              variant='contained'
+              startIcon={<DownloadIcon />}
+              sx={{ marginTop: 1 }}
+              component="span"
+            >
+              File Upload
+            </Button>
+          </label>
+
         </Box>
-      </Box>
+      </Box >
     )
   }
 
