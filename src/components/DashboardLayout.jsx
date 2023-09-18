@@ -70,22 +70,22 @@ const AppBar = styled(MuiAppBar, {
   }),
 }))
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
-    }),
-  })
-)
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  ...(open && {
+    ...openedMixin(theme),
+    '& .MuiDrawer-paper': openedMixin(theme),
+  }),
+  ...(!open && {
+    ...closedMixin(theme),
+    '& .MuiDrawer-paper': closedMixin(theme),
+  }),
+}))
 
 export default function MiniDrawer() {
   const theme = useTheme()
@@ -127,9 +127,15 @@ export default function MiniDrawer() {
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={isDrawerOpen}>
-        <DrawerHeader sx={{ background: (theme) => theme.palette.primary.main }}>
+        <DrawerHeader
+          sx={{ background: (theme) => theme.palette.primary.main }}
+        >
           <IconButton sx={{ color: '#fff' }} onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -152,7 +158,10 @@ export default function MiniDrawer() {
                 >
                   <DownloadIcon />
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: isDrawerOpen ? 1 : 0 }} />
+                <ListItemText
+                  primary={text}
+                  sx={{ opacity: isDrawerOpen ? 1 : 0 }}
+                />
               </ListItemButton>
             </ListItem>
           ))}

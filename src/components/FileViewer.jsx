@@ -12,36 +12,17 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString()
 
+const options = {
+  cMapUrl: '/cmaps/',
+  standardFontDataUrl: '/standard_fonts/',
+}
+
 function FileViewer({ file, handleFileUpload }) {
   const [numPages, setNumPages] = React.useState()
 
   const onDocumentLoadSuccess = ({ numPages: nextNumPages }) => {
-    console.log(numPages)
-
     setNumPages(nextNumPages)
   }
-
-  const render = React.useMemo(
-    () =>
-      file && (
-        <Box>
-          <Document
-            file={file}
-            onLoadSuccess={onDocumentLoadSuccess}
-            options={{
-              cMapUrl: '/cmaps/',
-              standardFontDataUrl: '/standard_fonts/',
-            }}
-          >
-            {Array.from(new Array(numPages), (el, index) => (
-              <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-            ))}
-          </Document>
-        </Box>
-      ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [file]
-  )
 
   if (!file) {
     return (
@@ -53,7 +34,13 @@ function FileViewer({ file, handleFileUpload }) {
           height: 'calc(100vh - 64px - 50px)',
         }}
       >
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
           Please import a file to get started
           <input
             accept="pdf/*"
@@ -77,7 +64,19 @@ function FileViewer({ file, handleFileUpload }) {
     )
   }
 
-  return render
+  return (
+    <Box>
+      <Document
+        file={file}
+        onLoadSuccess={onDocumentLoadSuccess}
+        options={options}
+      >
+        {Array.from(new Array(numPages), (el, index) => (
+          <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+        ))}
+      </Document>
+    </Box>
+  )
 }
 
 export default FileViewer
