@@ -89,12 +89,17 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme()
+
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(true)
   const [file, setFile] = React.useState(null)
+
+  const inputFile = React.useRef(null)
 
   const handleDrawerOpen = () => setIsDrawerOpen(true)
 
   const handleDrawerClose = () => setIsDrawerOpen(false)
+
+  const onButtonClick = () => inputFile.current.click()
 
   const handleFileUpload = (e) => {
     const { files } = e.target
@@ -148,6 +153,7 @@ export default function MiniDrawer() {
                   justifyContent: isDrawerOpen ? 'initial' : 'center',
                   px: 2.5,
                 }}
+                onClick={onButtonClick}
               >
                 <ListItemIcon
                   sx={{
@@ -163,6 +169,13 @@ export default function MiniDrawer() {
                   sx={{ opacity: isDrawerOpen ? 1 : 0 }}
                 />
               </ListItemButton>
+              <input
+                type="file"
+                id="file"
+                ref={inputFile}
+                onChange={handleFileUpload}
+                style={{ display: 'none' }}
+              />
             </ListItem>
           ))}
         </List>
